@@ -3,7 +3,15 @@ ECE 470 Final Project
 
 Details
 -----
-With the automation of a lot of manufacturing it is clear that repetitive tasks are soon to be completed by a robot. This is one of the most repetitive tasks is within the food industry. Thus, our group aims to create a robot that automates the process of making burgers. The customer (user) chooses the toppings they want on their burger. The options that the user gets to choose will be limited to the condiments and toppings due to inconsistency of meat cooking. The condiment options are ketchup, mustard, onions, tomatoes, and mayo. These toppings are common choices and we believe feasible to be placed on a burger by a robot. 
+With the automation of a lot of manufacturing it is clear that repetitive tasks are soon to be completed by a robot. This is one of the most repetitive tasks is within the food industry. Thus, our group aims to create a robot that automates the process of making burgers. The customer will choose how many burgers they want, and what kind of bread and 'meat' they want. The robot will work with a conveyour belt system to achieve this.  
+
+
+Options For 'Meat' and Bread
+
+Meats: Chicken, Beef, Veggie
+Bread: White Plain, Whole Wheat, Pretzel
+
+The users can apply their own condiments to their liking. 
 
 
 
