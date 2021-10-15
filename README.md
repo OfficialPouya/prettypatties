@@ -15,6 +15,7 @@ The users can apply their own condiments to their liking.
 
 
 **Codebase**
+-----
 This repository includes code to run the UR3 robot on the simulation software Gazebo. The package.xml file is used to build the entire repository into a package so that ROS can run the code in it. In the scripts folder there are many different python files to run code on the UR3. These include seperate functions for forward/inverse kinematics, interfacing functions for ROS, UR3 gripper functions and a header file. There is also a spawn script to spawn in each individual item needed to make a burger.
 
 
