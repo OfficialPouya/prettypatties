@@ -35,7 +35,7 @@ def Get_MS():
     S[3] = screw_mat(w4,v4)
     S[4] = screw_mat(w5,v5)
     S[5] = screw_mat(w6,v6)
-    M = [[0,-1,0, 390],[0,0,-1, 401],[1,0,0, 213.5],[0,0,0,1]]
+    M = [[0,-1,0, 390],[0,0,-1, 401],[1,0,0, 215.5],[0,0,0,1]]
 
     # ==============================================================#
     return M, S
@@ -46,6 +46,7 @@ Function that calculates encoder numbers for each motor
 """
 
 def lab_fk(theta1, theta2, theta3, theta4, theta5, theta6):
+   
     # Initialize the return_value
     return_value = [None, None, None, None, None, None]
 
@@ -60,11 +61,11 @@ def lab_fk(theta1, theta2, theta3, theta4, theta5, theta6):
     print(S[1])
     print("S2 \n")
     print(S[2])
-    print("S3 \n")
+    print("S3 \n")  
     print(S[3])
-    print("S4 \n")
+    print("S4 \n")  
     print(S[4])
-    print("S5 \n")
+    print("S5 \n")  
     print(S[5])
 
     S[0] = S[0]*theta1
@@ -98,3 +99,49 @@ def lab_fk(theta1, theta2, theta3, theta4, theta5, theta6):
     return_value[5] = theta6
 
     return return_value
+
+
+
+def lab_invk(xWgrip, yWgrip, zWgrip, yaw_WgripDegree):
+    # =================== Your code starts here ====================#
+    l1 = 152
+    l2 = 120
+    l3 = 244
+    l4 = 93
+    l5 = 213
+    l6 = 83
+    l7 = 83
+    l8 = 82
+    l9 = 53.5
+    l10 = 59 
+    xcen = xWgrip - 53.5*(numpy.cos(numpy.radians((yaw_WgripDegree))))+150
+    ycen = yWgrip - 53.5*(numpy.sin(numpy.radians((yaw_WgripDegree))))-150
+    zcen = zWgrip -10
+
+    theta1 = numpy.arctan2(ycen,xcen)-(numpy.arcsin((l2-l4+l6)/numpy.sqrt(xcen**2+ycen**2)))
+
+    x3end = xcen - (l7*numpy.cos(theta1)) + ((l6+27)*numpy.sin(theta1))
+    y3end = ycen - ((l6+27)*numpy.cos(theta1)) - (l7*numpy.sin(theta1))
+    z3end = zcen + l10 + l8
+
+    csqared = ((x3end**2)+(y3end**2))+((z3end-l1)**2)
+    c = numpy.sqrt(csqared)
+    #theta2 = -numpy.arctan2((z3end-l1),numpy.sqrt((x3end**2)+(y3end**2))-numpy.arccos(((l3**2)+csqared-(l5**2))/(-2*l3*c)))
+    theta2 = (-1*numpy.arccos(((l5**2)-csqared-(l3**2))/(-2*l3*c))) - numpy.arcsin((z3end-l1)/c)
+    theta3 = PI - numpy.arccos(((l3**2)+(l5**2)-csqared)/(2*l3*l5))
+    theta4 = -(PI-(PI-theta3-(theta2)))
+    theta5 = -PI/2
+    theta6 = PI-(PI/2-theta1)-numpy.radians(yaw_WgripDegree)
+
+    print(theta1)
+    print(theta2)
+    print(theta3)
+    print(theta4)
+    print(theta5)
+    print(theta6)
+
+    result = lab_fk(float(theta1), float(theta2), float(theta3), float(theta4), float(theta5), float(theta6))
+    return result
+
+    # ==============================================================#
+    pass

@@ -12,7 +12,7 @@ SPIN_RATE = 20
 
 # UR3 home location
 home = [0*PI/180.0, 0*PI/180.0, 0*PI/180.0, 0*PI/180.0, 0*PI/180.0, 0*PI/180.0]
-
+go_away = [270*PI/180.0, -90*PI/180.0, 90*PI/180.0, -90*PI/180.0, -90*PI/180.0, 135*PI/180.0]
 # UR3 current position, using home position for initialization
 current_position = copy.deepcopy(home)
 
@@ -155,60 +155,75 @@ def move_arm(pub_cmd, loop_rate, dest, vel, accel):
 
 	return error
 
-"""
-Program run from here
-"""
+def move_food(pub_cmd, loop_rate, start_xw_yw_zw, target_xw_yw_zw, vel, accel):
+
+    destination = lab_invk(start_xw_yw_zw[0],start_xw_yw_zw[1],start_xw_yw_zw[2],0)
+    high_destination = lab_invk(start_xw_yw_zw[0],start_xw_yw_zw[1],150,0)
+    move_arm(pub_cmd, loop_rate, high_destination, vel, accel)
+    move_arm(pub_cmd, loop_rate, destination, vel, accel)
+    gripper(pub_cmd,loop_rate,suction_on)
+    time.sleep(.5)
+    if(digital_in_0 == False):
+        move_arm(pub_cmd, loop_rate, go_away, vel, accel)
+        print("No Block Detected")
+        # kill robot
+        gripper(pub_cmd,loop_rate,suction_off)
+       
+        return -1
+    move_arm(pub_cmd, loop_rate, high_destination, vel, accel)
+    time.sleep(.5)
+    new_high_destination = lab_invk(target_xw_yw_zw[0],target_xw_yw_zw[1],150,0)
+    new_dest = lab_invk(target_xw_yw_zw[0],target_xw_yw_zw[1],target_xw_yw_zw[2],0)
+    move_arm(pub_cmd, loop_rate, new_high_destination, vel, accel)
+    move_arm(pub_cmd, loop_rate, new_dest, vel, accel)
+    gripper(pub_cmd,loop_rate,suction_off)
+    move_arm(pub_cmd, loop_rate, new_high_destination, vel, accel)
+    error = 0
+
+    # ========================= Student's code ends here ===========================
+
+    return error
+
+
 def main():
 
-	global home
+    global go_away
 
-	# Initialize ROS node
-	rospy.init_node('projectnode')
+    # Initialize ROS node
+    rospy.init_node('projectnode')
 
     # Initialize publisher for ur3/command with buffer size of 10
-	pub_command = rospy.Publisher('ur3/command', command, queue_size=10)
+    pub_command = rospy.Publisher('ur3/command', command, queue_size=10)
 
-	# Initialize subscriber to ur3/position & ur3/gripper_input and callback fuction
-	# each time data is published
-	sub_position = rospy.Subscriber('ur3/position', position, position_callback)
-	sub_input = rospy.Subscriber('ur3/gripper_input', gripper_input, input_callback)
+    # Initialize subscriber to ur3/position & ur3/gripper_input and callback fuction
+    # each time data is published
+    sub_position = rospy.Subscriber('ur3/position', position, position_callback)
+    sub_input = rospy.Subscriber('ur3/gripper_input', gripper_input, input_callback)
 
-	new_dest = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+    # Check if ROS is ready for operation
+    while(rospy.is_shutdown()):
+        print("ROS is shutdown!")
 
-	if(len(sys.argv) != 7):
-		print("\n")
-		print("Command should be entered in degrees with format: \n")
-		print("rosrun lab3pkg_py lab3_exec.py theta1 theta2 theta3 theta4 theta5 theta6 \n")
-	else:
-		print("\ntheta1: " + sys.argv[1] + ", theta2: " + sys.argv[2] + \
-			  ", theta3: " + sys.argv[3] + ", theta4: " + sys.argv[4] + \
-			  ", theta5: " + sys.argv[5] + ", theta6: " + sys.argv[6] + "\n")
+    # Initialize the rate to publish to ur3/command
+    loop_rate = rospy.Rate(SPIN_RATE)
 
-	new_dest = lab_fk(float(sys.argv[1])*PI/180.0, float(sys.argv[2])*PI/180.0, \
-		              float(sys.argv[3])*PI/180.0, float(sys.argv[4])*PI/180.0, \
-		              float(sys.argv[5])*PI/180.0, float(sys.argv[6])*PI/180.0,)
+    vel = 4.0
+    accel = 4.0
+    move_arm(pub_command, loop_rate, go_away, vel, accel)
+    time.sleep(5)
+   
+    if(-1 == move_food(pub_command, loop_rate, [150,-200,2], [100,400,10], vel, accel)):
+        return
 
-
-	vel = 4.0
-	accel = 4.0
-
-	# Check if ROS is ready for operation
-	while(rospy.is_shutdown()):
-		print("ROS is shutdown!")
-
-	# Initialize the rate to publish to ur3/command
-	loop_rate = rospy.Rate(SPIN_RATE)
-
-	move_arm(pub_command, loop_rate, new_dest, vel, accel)
-
-	rospy.loginfo("Destination is reached!")
-
-
+    move_arm(pub_command, loop_rate, go_away, vel, accel)
+    rospy.loginfo("Burger Produced. Looks yummy!")
+    print("Use Ctrl+C to go eat it!")
+    rospy.spin()
 
 if __name__ == '__main__':
-	
-	try:
-		main()
+
+    try:
+        main()
     # When Ctrl+C is executed, it catches the exception
-	except rospy.ROSInterruptException:
-		pass
+    except rospy.ROSInterruptException:
+        pass
