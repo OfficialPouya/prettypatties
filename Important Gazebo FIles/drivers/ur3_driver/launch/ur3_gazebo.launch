@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<launch>
+
+  <arg name="limited" default="false" doc="If true, limits joint range [-PI, PI] on all joints." />
+  <arg name="paused" default="false" doc="Starts gazebo in paused mode" />
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+
+  <!-- startup simulated world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <!-- <arg name="world_name" default="worlds/empty.world"/> -->
+    <arg name="world_name" value="$(find ur3_driver)/worlds/my_mesh.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- send robot urdf to param server -->
+  <include file="$(find ur_description)/launch/ur3_upload.launch">
+    <arg name="limited" value="$(arg limited)"/>
+  </include>
+
+  <node name="spawn_cheese1" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/cheese.urdf -urdf -model cheese1 -x 0.162 -y .575 -z .8" respawn="false" output="screen" />
+  <!-- <node name="spawn_cheese2" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/cheese.urdf -urdf -model cheese2 -x 0.197 -y .67 -z .85" respawn="false" output="screen" /> -->
+  <!-- <node name="spawn_cheese3" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/cheese.urdf -urdf -model cheese3 -x 0.197 -y .67 -z .9" respawn="false" output="screen" /> -->
+  
+  <node name="spawn_burger1" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/burger.urdf -urdf -model burger1 -x 0.16 -y .45 -z .8" respawn="false" output="screen" />
+  <node name="spawn_burger2" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/burger.urdf -urdf -model burger2 -x 0.16 -y .45 -z .85" respawn="false" output="screen" />
+  <node name="spawn_burger3" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/burger.urdf -urdf -model burger3 -x 0.16 -y .45 -z .9" respawn="false" output="screen" />
+
+  <node name="spawn_tomato1" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/tomato.urdf -urdf -model tom1 -x -0.21 -y .4 -z .8" respawn="false" output="screen" />
+  <node name="spawn_tomato2" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/tomato.urdf -urdf -model tom2 -x -0.21 -y .4 -z .8" respawn="false" output="screen" />
+  <!-- <node name="conveyor" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/conveyor.urdf -urdf -model con -x 2 -y 2 -z 0" respawn="false" output="screen" /> --> -->
+  <group ns="conveyor">
+		<node name="spawn_model_belt" pkg="gazebo_ros" type="spawn_model" args="-file $(find demo_world)/urdf/conveyor.urdf -urdf -model conveyor_belt -x .1 -y 2 -z 0" respawn="false" output="screen" />
+	</group> 
+
+  <node name="spawn_bcafe" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/cafe.urdf -urdf -model cafe -x 2 -y 2 -z 0" respawn="false" output="screen" />
+
+  <node name="spawn_bottom_bun" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bottom_bun.urdf -urdf -model bun_b1 -x -0.21 -y .55 -z .78" respawn="false" output="screen" />
+  <node name="spawn_bottom_bun2" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bottom_bun.urdf -urdf -model bun_b2 -x -0.21 -y .67 -z .78" respawn="false" output="screen" />
+  <node name="spawn_top_bun" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bun.urdf -urdf -model bun_t1 -x -0.21 -y .55 -z .84" respawn="false" output="screen" />
+  <node name="spawn_top_bun2" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bun.urdf -urdf -model bun_t2 -x -0.21 -y .67 -z .83" respawn="false" output="screen" />
+
+  <node name="spawn_bottom_bun3" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bottom_bun.urdf -urdf -model bun_b3 -x -0.05 -y .55 -z .78" respawn="false" output="screen" />
+  <node name="spawn_bottom_bun4" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bottom_bun.urdf -urdf -model bun_b4 -x -0.05 -y .67 -z .78" respawn="false" output="screen" />
+  <node name="spawn_top_bun3" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bun.urdf -urdf -model bun_t3 -x -0.05 -y .55 -z .83" respawn="false" output="screen" />
+  <node name="spawn_top_bun4" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/bun.urdf -urdf -model bun_t4 -x -0.05 -y .67 -z .83" respawn="false" output="screen" />
+
+  <node name="spawn_base_plate" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/base_plate.urdf -urdf -model plate -x -0.15 -y 0.15 -z .8" respawn="false" output="screen" />
+
+  <!-- push robot_description to factory and spawn robot in gazebo -->
+  <node name="spawn_gazebo_model" pkg="gazebo_ros" type="spawn_model" args="-urdf -param robot_description -model robot -x -0.15 -y 0.15 -z .8" respawn="false" output="screen" />
+
+  <include file="$(find ur_gazebo)/launch/controller_utils.launch"/>
+
+  <!-- start this controller -->
+  <rosparam file="$(find ur_gazebo)/controller/arm_controller_ur3.yaml" command="load"/>
+  <node name="arm_controller_spawner" pkg="controller_manager" type="controller_manager" args="spawn arm_controller" respawn="false" output="screen"/>
+
+  <!-- load other controllers -->
+  <node name="ros_control_controller_manager" pkg="controller_manager" type="controller_manager" respawn="false" output="screen" args="load joint_group_position_controller" />
+
+  <!-- <node name="spawn_block" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/block.urdf -urdf -model block" /> -->
+
+  <node name="spawn_camera" pkg="gazebo_ros" type="spawn_model" args="-file $(find ur_description)/urdf/camera.urdf -urdf -model camera -x 0.29 -y 0.105 -z 1.5" />
+
+	<node name="ur3_gazebo_driver_1" pkg="ur3_driver" type="ur3_gazebo_driver.py" output="screen">
+	</node>
+
+</launch>
