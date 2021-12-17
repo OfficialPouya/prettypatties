@@ -24,8 +24,44 @@ Updates
 
 11/17/21 - Gripper Funcionality added, Inverse Kinematics code added to the func file in scripts, Burger, Bun and Cheese models all created but not currently working in model (will be fixed soon)
 
-10/15/21 - package.xml setup (able to be ran and used by ROS now), Readme Updated, basic scripts structure added. 
+10/15/21 - package.xml setup (able to be ran and used by ROS now), Readme Updated, basic scripts structure added.
 
+Project Update 2
+-----
+
+General Project Updates: Before this project update, we talked to a few TAs about some of the issues we could have with our fast food robot. We received a lot of different feedback and it was all very dependent on how far we took this project. For example, we were told that using full scale gravity on the whole sandwich along with elastics will make Gazebo unstable in certain cases. Using what we learned as a guide, we started at the basics and moved on from there.
+
+Burger 3D Model Files: Using prior knowledge of CAD software, we first designed 4 basic parts to make a simple, plain burger. Our first ingredients we used were two buns, a burger patty, and a slice of cheese. These items were designed and exported from Fusion 360 with textures that match those of real food (the best they could be). These objects were then uploaded into Gazebo using a mesh file (.dae or .stl). There were originally a few issues with the scaling of the mesh files but we found the <scale> command was useful for fixing it.
+
+Fast Food World File: We learned that the best way to start manipulating our objects with our UR3 robot was to create a .world file that could be loaded by our gazebo.launch file. We created our first .world file by adding 2 tables that were in Gazebo along with the mesh burger ingredients we made. This file was then linked to the launch file when roslaunch is called. 
+
+There is one issue that we have found where the textures of the mesh files are not loading into the world. They are currently showing up transparent but are still in the model explorer. We are working to fix this small bug now. 
+
+
+Robot Movement: After getting the world file loaded correctly, we now could implement both forward and inverse kinematics to move objects in Gazebo. Using our lab code from lab 4 and 5, inverse kinematics was a very simple application. We did have to make a few adjustments to our project_exec file so we could move the robot. We implemented a simple function called “move_food” that is similar to the sequence used in the lab for “move_block.” The implementation can be seen at this youtube link: https://youtu.be/Ja0aNMC185E
+
+Sensing: We implemented gripper sensing in the last checkpoint, but had issues actually using it for this checkpoint. It took some help from our fellow ECE 470 students on the discord server to figure out our gripper issue. A student pointed out to us that the max/min distances and force of the gripper could be adjusted in the UR3 URDF file, once we adjusted them we could grab and place objects! This can also be seen in the video above. We also added our code for using the camera, it is similar to the blob detection we used in lab 5. We haven’t used it to move the robot quite yet because we had issues with the mesh files being transparent instead of an actual color for the camera to detect. 
+
+Next Steps: Our next goal is to fix our issue with the mesh files for our burger not loading in the world correctly. We can then manipulate those items with the robot and make our burger. We were worried about Gazebo not working well with our project because of gravity, but at the moment the gravity component of Gazebo has worked (so far). Once we are able to load our burger parts into the UR3 .world correctly we will only need to code the robot to fully prepare the sandwich. We are getting much closer to our goal of a functioning fast food robot. 
+
+Conclusion: Overall, this checkpoint has been successful. Using peer coding, and troubleshooting we were able to reach milestone 2. 
+  
+Project Update 1
+-----
+General Project Updates: After getting some feedback from TA and experimenting with Gazebo, we have decided that the condiments aspect within the realm of this project might be a bit more difficult. Thus, we have decided to take a slightly different approach and omit that idea. So our robot's goal is to assemble a basic burger using the robot arm and series of conveyor belts. This should simplify the process within the simulator. 
+
+Environment Setup: Our first step to achieve our goals for this checkpoint, was to set up the environment, and launch Gazebo. We first made a repository so that we could store all our project files. Using the lab packages as a guide, we made a package.xml file along with 3 python files in a scripts folder: project_exec.py, project_header.py, project_kinematics_func.py. 
+
+Scripts Folder Files: 
+Robot Movement: After achieving that, we wanted to be able to move our robot to the points we want. So far, we have been able to move the robot arm using forward kinematics. Using our lab 3 code as a guide, we implemented forward kinematics functions into a separate ‘func’ file.  The movement can be seen at the following: https://www.youtube.com/watch?v=8-Bx7udjONI Furthermore, we have been able to spawn in objects using a spawn file. An image of 3 blocks we spawned using a spawn file:
+
+Sensing: The sensing we first experimented with was the gripper feedback, we were able to get feedback with our gripper if an object was grabbed or not. This will be very helpful with our project of grabbing food since we will need to know if an object is being held or not. 
+
+Next Steps: Our next goal is to manipulate the objects and move the robot with inverse kinematics as well. We also need to use the camera as well, which we should be able to achieve within a few labs. Lastly, we will need to model all of the rest of the physical items our robot will need to be manipulating: burger, buns, cheese, etc. We will need to add these to our spawn file and load them into the world when we first start running Gazebo. 
+
+Conclusion: Overall, this checkpoint has been successful. Using peer coding, and troubleshooting we were able to reach milestone 1 with ease.
+
+  
 Group Members
 -----
 Pouya Akbarzadeh
