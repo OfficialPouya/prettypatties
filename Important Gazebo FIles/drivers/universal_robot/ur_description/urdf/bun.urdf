@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<robot name="block">
+
+<link name="bun_link">
+
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <!-- <mesh filename="package://ur_description/meshes/Bun_v1.stl" scale="0.003 0.003 0.003"/> -->
+      <box size="0.075 0.075 0.02" />
+    </geometry>
+  </collision>
+
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://ur_description/meshes/Bun_v1.stl" scale="0.003 0.003 0.003"/>
+    </geometry>
+  </visual>
+
+  <inertial>
+   <origin xyz="0 0 0" rpy="0 0 0"/>
+   <mass value="0.0225" />
+   <inertia
+      ixx="0.0" ixy="0.0"  ixz="0.0"
+      iyy="0.0" iyz="0.0"  izz="0.0" />
+  </inertial>
+</link>
+
+<gazebo reference="bun_link">
+  <static>1</static>
+  <visual>
+    <material>
+      <ambient>0.82 0.70 0.54 1.0</ambient>
+      <diffuse>0.82 0.70 0.54 1.0</diffuse>
+      <specular>0 0 0 1.0</specular>
+      <emissive>0 0 0 1.0</emissive>
+    </material>
+  </visual>
+  <mu1>100</mu1>
+  <mu2>100</mu2>
+  <kp>2147483647</kp>
+  <kd>1</kd>
+  <maxVel>0</maxVel>
+  <minDepth>0.001</minDepth>
+</gazebo>
+
+</robot>
