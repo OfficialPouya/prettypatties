@@ -16,9 +16,15 @@ The users can apply their own condiments to their liking.
 
 **Codebase**
 -----
-This repository includes code to run the UR3 robot on the simulation software Gazebo. The package.xml file is used to build the entire repository into a package so that ROS can run the code in it. In the scripts folder there are many different python files to run code on the UR3. These include seperate functions for forward/inverse kinematics, interfacing functions for ROS, UR3 gripper functions and a header file. There is also a spawn script to spawn in each individual item needed to make a burger.
+This repository includes code to run the UR3 robot on the simulation software Gazebo. The package.xml file is used to build the entire repository into a package so that ROS can run the code in it. In the scripts folder there are many different python files to run code on the UR3. These include seperate functions for forward/inverse kinematics, interfacing functions for ROS, UR3 gripper functions and a header file. The folder labeled Important Gazebo files include 3 folders that need to be placed in the src directory of the catkin_project. The most important one is the drivers folder which includes a different gazebo.launch file along with mutliple important mesh and urdf files for our model. To run this project you need to source then run "roslaunch" the ur3_driver and on a new terminal source and "rosrun" of the package. If you would like to see a repo of the entire catkin_project take a look at this link: https://github.com/JJStorm22/catkin_fp
 
+Updates
+-----
+12/17/21 - The final project updates - all new camera and OpenCV implementation/code, multiple new urdf files for testing and for new food, ability to make up to 3 burgers in one run (limited on food depot availability), and much much more! (Many commits made to public repositoy above with entire catkin file for building).
 
+11/17/21 - Gripper Funcionality added, Inverse Kinematics code added to the func file in scripts, Burger, Bun and Cheese models all created but not currently working in model (will be fixed soon)
+
+10/15/21 - package.xml setup (able to be ran and used by ROS now), Readme Updated, basic scripts structure added. 
 
 Group Members
 -----
